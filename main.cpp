@@ -385,6 +385,8 @@ void KeithEmerson::activateKeyboardGodMode()
 
 SynthMoog& KeithEmerson::getKeyboard(unsigned int whichKeyboard)
 {
+    if (whichKeyboard > 14)
+        whichKeyboard = 14; // clamp if higher
     return this->keyboards[whichKeyboard];
 }
 
