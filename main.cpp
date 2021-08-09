@@ -121,7 +121,7 @@ int EnvelopeGenerator::getAttack()
 
 void EnvelopeGenerator::printAttackMsg()
 {
-   std::cout << "envGen's Attack is: " << this -> getAttack() << std::endl; 
+   std::cout << "envGen's Attack is: " << this->getAttack() << std::endl; 
 }
 /*
  UDT 2:
@@ -174,22 +174,22 @@ void LowFreqOscillator::setParams(double freq, int wave, int mod)
 
 double LowFreqOscillator::getFrequency()
 {
-    return this -> frequency;
+    return this->frequency;
 }
 
 void LowFreqOscillator::printFrequencyMsg()
 {
-    std::cout << "lfo's Frequency is: " << this -> getFrequency() << std::endl;    
+    std::cout << "lfo's Frequency is: " << this->getFrequency() << std::endl;    
 }
 
 int LowFreqOscillator::getModDepth()
 {
-    return this -> modDepth;
+    return this->modDepth;
 }
 
 void LowFreqOscillator::printModDepthMsg()
 {
-    std::cout << "lfo's Mod Depth is: " << this -> getModDepth() << std::endl;    
+    std::cout << "lfo's Mod Depth is: " << this->getModDepth() << std::endl;    
 }
 /*
  UDT 3:
@@ -277,13 +277,13 @@ float Voice::Oscillator::getFrequency()
 
 void Voice::printAttackMsg()
 {
-    std::cout << "Voice's Oscillator 1 attack is: " << this -> osc1.ADSR.getAttack() << 
+    std::cout << "Voice's Oscillator 1 attack is: " << this->osc1.ADSR.getAttack() << 
     std::endl;
 }
 
 void Voice::printFrequencyMsg()
 {
-    std::cout << "Voice's Oscillator 1 frequency is: " << this -> osc1.getFrequency() << std::endl;
+    std::cout << "Voice's Oscillator 1 frequency is: " << this->osc1.getFrequency() << std::endl;
 }
 /*
  new UDT 4:
@@ -348,7 +348,7 @@ std::string SynthMoog::getModelName()
 
 void SynthMoog::printLFOFrequency()
 {
-    std::cout << "Synth's LFO frequency is: " << this -> lfo.getFrequency() << std::endl;
+    std::cout << "Synth's LFO frequency is: " << this->lfo.getFrequency() << std::endl;
 }
 /*
  new UDT 5:
@@ -392,7 +392,7 @@ SynthMoog& KeithEmerson::getKeyboard(unsigned int whichKeyboard)
 
 void KeithEmerson::printModelName()
 {
-    std::cout << "Kieth's synth is an " << this -> getKeyboard(0).getModelName() << std::endl;
+    std::cout << "Kieth's synth is an " << this->getKeyboard(0).getModelName() << std::endl;
 }
 
 /*
