@@ -98,7 +98,7 @@ void EnvelopeGenerator::setADSR(int a, int d, int s, int r)
     sustain = s;
     release = r;
 
-    for (int c{0}; c <10; c++) FIXME: use pre-increment, not post-increment https://en.cppreference.com/w/cpp/language/operator_incdec
+    for (int c{0}; c <10; ++c)
         sustain = c;
 }
 
@@ -213,9 +213,12 @@ void Voice::mute()
 
 Voice::Oscillator::Oscillator() : oscType(1), sync(false)
 {
-    for (int j{0}; j< 10; ++j)  FIXME
-        sync = true;  FIXME:  why are you setting 'sync' to true 10 times in a row?
-
+    for (int j{0}; j< 10; ++j)
+    {  
+        sync = true;  //FIXME:  why are you setting 'sync' to true 10 times in a row?
+        // ANSWER: no particular reason other then pedagogy.  Not actually 
+        // building a synth here.
+    }
     ADSR.setADSR(0,0,0,0);
 }
 
@@ -260,10 +263,10 @@ SynthMoog::~SynthMoog()
 
 void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-        voices[voiceNum].osc1.setFrequency(freq); FIXME: indentation
-        voices[voiceNum].osc2.setFrequency(freq); FIXME: indentation
-        voices[voiceNum].osc3.setFrequency(freq); FIXME: indentation
-        voices[voiceNum].osc4.setFrequency(freq); FIXME: indentation
+    voices[voiceNum].osc1.setFrequency(freq);
+    voices[voiceNum].osc2.setFrequency(freq);
+    voices[voiceNum].osc3.setFrequency(freq);
+    voices[voiceNum].osc4.setFrequency(freq);
 }
 
 void SynthMoog::setADSR(int attack, int decay, int sustain, int release)
@@ -278,8 +281,10 @@ void SynthMoog::setLFO(double frequency, int waveform, int modDepth)
 
 void SynthMoog::playChord()
 {
-    for(auto& voice: voices) FIXME
+    for(auto& voice: voices)
+    { 
         voice.playSound();
+    }
 }
 
 std::string SynthMoog::getModelName()
@@ -311,8 +316,10 @@ KeithEmerson::~KeithEmerson()
 
 void KeithEmerson::activateKeyboardGodMode()
 {
-    for(auto& keyboard: keyboards) FIXME
-        keyboard.playChord();   
+    for(auto& keyboard: keyboards)
+    {
+        keyboard.playChord(); 
+    }  
 }
 
 
