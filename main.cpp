@@ -85,6 +85,7 @@ struct EnvelopeGenerator
     void connect(bool inSignalPath);
     void reset();
     int getAttack();
+    void printAttackMsg();
 };
 
 EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
@@ -118,6 +119,10 @@ int EnvelopeGenerator::getAttack()
     return this->attack;
 }
 
+void EnvelopeGenerator::printAttackMsg()
+{
+   std::cout << "envGen's Attack is: " << this -> getAttack() << std::endl; 
+}
 /*
  UDT 2:
  */
@@ -136,6 +141,8 @@ struct LowFreqOscillator
     void setParams(double frequency, int waveform, int modDepth);
     double getFrequency();
     int getModDepth(); 
+    void printFrequencyMsg();
+    void printModDepthMsg();
 };
 
 LowFreqOscillator::LowFreqOscillator() : frequency(440), waveform(0), modDepth(0)
@@ -170,9 +177,19 @@ double LowFreqOscillator::getFrequency()
     return this -> frequency;
 }
 
+void LowFreqOscillator::printFrequencyMsg()
+{
+    std::cout << "lfo's Frequency is: " << this -> getFrequency() << std::endl;    
+}
+
 int LowFreqOscillator::getModDepth()
 {
     return this -> modDepth;
+}
+
+void LowFreqOscillator::printModDepthMsg()
+{
+    std::cout << "lfo's Mod Depth is: " << this -> getModDepth() << std::endl;    
 }
 /*
  UDT 3:
@@ -184,6 +201,8 @@ struct Voice
     void initialize();
     void playSound();
     void mute();
+    void printFrequencyMsg();
+    void printAttackMsg();
 
     struct Oscillator
     {
@@ -255,6 +274,17 @@ float Voice::Oscillator::getFrequency()
 {
     return this->frequency;
 }
+
+void Voice::printAttackMsg()
+{
+    std::cout << "Voice's Oscillator 1 attack is: " << this -> osc1.ADSR.getAttack() << 
+    std::endl;
+}
+
+void Voice::printFrequencyMsg()
+{
+    std::cout << "Voice's Oscillator 1 frequency is: " << this -> osc1.getFrequency() << std::endl;
+}
 /*
  new UDT 4:
  */
@@ -272,6 +302,8 @@ struct SynthMoog
     void setLFO(double frequency, int waveform, int modDepth);
     void playChord();
     std::string getModelName();
+
+    void printLFOFrequency();
 };
 
 
@@ -305,15 +337,18 @@ void SynthMoog::setLFO(double frequency, int waveform, int modDepth)
 
 void SynthMoog::playChord()
 {
-    for(auto& voice: voices)
-    { 
+    for(auto& voice : voices)
         voice.playSound();
-    }
 }
 
 std::string SynthMoog::getModelName()
 {
     return "Emerson Moog Modular";
+}
+
+void SynthMoog::printLFOFrequency()
+{
+    std::cout << "Synth's LFO frequency is: " << this -> lfo.getFrequency() << std::endl;
 }
 /*
  new UDT 5:
@@ -327,6 +362,7 @@ struct KeithEmerson
 
     void activateKeyboardGodMode();
     SynthMoog& getKeyboard(unsigned int whichKeyboard);
+    void printModelName();
 };
 
 KeithEmerson::KeithEmerson()
@@ -352,6 +388,10 @@ SynthMoog& KeithEmerson::getKeyboard(unsigned int whichKeyboard)
     return this->keyboards[whichKeyboard];
 }
 
+void KeithEmerson::printModelName()
+{
+    std::cout << "Kieth's synth is an " << this -> getKeyboard(0).getModelName() << std::endl;
+}
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -372,44 +412,44 @@ int main()
     envGen1.setADSR(10,20,30,40);
     envGen2.setADSR(40,30,20,10);
     std::cout << "envGen1's Attack is: " << envGen1.attack << std::endl;
-    std::cout << "envGen1's Attack is: " << envGen1.getAttack() << std::endl;
+    envGen1.printAttackMsg();
+
     std::cout << "envGen2's Attack is: " << envGen2.attack << std::endl;
-    std::cout << "envGen2's Attack is: " << envGen2.getAttack() << std::endl;
+    envGen2.printAttackMsg();
 
     LowFreqOscillator lfo1, lfo2;
     lfo1.setParams(880, 1, 5);
     lfo2.setParams(440, 2, 35);
     std::cout << "lfo1's Frequency is: " << lfo1.frequency << std::endl;
-    std::cout << "lfo1's Frequency is: " << lfo1.getFrequency() << std::endl;
+    lfo1.printFrequencyMsg();
     std::cout << "lof2's Mod Depth is: " << lfo2.modDepth << std::endl;
-    std::cout << "lof2's Mod Depth is: " << lfo2.getModDepth() << std::endl;
+    lfo2.printModDepthMsg();
 
     Voice voice1, voice2;
     int attack = voice1.osc1.ADSR.attack;
     std::cout << "Voice 1's Oscillator 1 attack is: " << attack << 
     std::endl;
-    std::cout << "Voice 1's Oscillator 1 attack is: " << voice1.osc1.ADSR.getAttack() << 
-    std::endl;
+    voice1.printFrequencyMsg();
     float frequency = voice2.osc1.frequency;
     std::cout << "Voice 2's Oscillator 1 frequency is: " << frequency << std::endl;
-    std::cout << "Voice 2's Oscillator 1 frequency is: " << voice2.osc1.getFrequency() << std::endl;
+    voice2.printAttackMsg();
 
     SynthMoog synth1, synth2;
     synth1.setLFO(30, 1, 10);
     synth2.setLFO(60, 2, 20);
     std::cout << "Synth 1's LFO frequency is: " << synth1.lfo.frequency << std::endl;
-    std::cout << "Synth 1's LFO frequency is: " << synth1.lfo.getFrequency() << std::endl;
+    synth1.printLFOFrequency();
     std::cout << "Synth 2's LFO frequency is: " << synth2.lfo.frequency << std::endl;
-    std::cout << "Synth 2's LFO frequency is: " << synth2.lfo.getFrequency() << std::endl;
+    synth2.printLFOFrequency();
 
     KeithEmerson keith1, keith2;
     keith1.activateKeyboardGodMode();
     std::cout << "Kieth 1's synth is an " << keith1.keyboards[0].getModelName() << std::endl;
-    std::cout << "Kieth 1's synth is an " << keith1.getKeyboard(0).getModelName() << std::endl;
+    keith1.printModelName();
 
     keith2.activateKeyboardGodMode();
     std::cout << "Kieth 2's synth is an " << keith2.keyboards[0].getModelName() << std::endl;
-    std::cout << "Kieth 2's synth is an " << keith2.getKeyboard(0).getModelName() << std::endl;
+    keith2.printModelName();
 
     std::cout << "good to go!" << std::endl;
 }
