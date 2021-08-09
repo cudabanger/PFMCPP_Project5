@@ -1,45 +1,74 @@
 /*
-Project 5: Part 1 / 4
- video Chapter 2 - Part 12
- Create a branch named Part1
-Purpose:  This project continues developing Project3.
-       you will learn how to take code from existing projects and migrate only what you need to new projects
-       you will learn how to write code that doesn't leak as well as how to refactor. 
-=============================================
-Since you didn't do Project 3:
-=============================================
-write 3 UDTs below that EACH have: 
-        5 member variables
-            the member variable names and types should be relevant to the work the UDT will perform.
-            pick properties that can be represented with 'int float double bool char std::string'
-        3 member functions with an arbitrary number of parameters
-            give some of those parameters default values.
-        constructors that initialize some of these member variables
-            the remaining member variables should be initialized in-class
-        for() or while() loops that modify member variables
- 1) 2 of your 3 UDTs need to have a nested UDT.
-    this nested UDT should fulfill the same requirements as above:
-        5 member variables  
-        3 member functions
-        constructors and loops.
-        
- 2) Define your implementations of all functions OUTSIDE of the class. 
- NO IN-CLASS IMPLEMENTATION ALLOWED
- 3) add destructors to all of your UDTs
-        make the destructors do something like print out the name of the class.
+Project 5: Part 2 / 4
+ video: Chapter 3 Part 1
+
+Create a branch named Part2
+
+ The 'this' keyword
  
- 4) add 2 new UDTs that use only the types you copied above as member variables.
+ The purpose of this project part is to show you how accessing member variables of objects INSIDE member functions is very similar to accessing member variables of objects OUTSIDE of member functions, via 'this->' and via the '.' operator.
+ This project part will break the D.R.Y. rule, but that is fine for the purpose of this project part.
  
- 5) Add destructors to these 2 new types that do something.  
-        maybe print out the name of the class being destructed, or call a member function of one of the members.  be creative
+ 0) make sure any operators (:, <, ++, =, etc) have spaces around them so they're easy to read.
+    also fix any FIXMEs.
  
- 6) use at least 2 instances of each of your UDTs in main. 
-        add some std::cout statements in main() that use your UDT's member variables.
+ 1) if you don't have any std::cout statements in main() that access member variables of your U.D.Ts
+         write some.
+    You can copy some from your Project3's main() if needed.
  
- 7) After you finish, click the [run] button.  Clear up any errors or warnings as best you can.
+ 2) For each std::cout statement in main() that accessed member variables of your types or printed out the results of your member function calls,
+        a) write a member function that prints the same thing out, but uses the proper techniques inside the member functions to access the same member variables/functions.
+        b) be explicit with your use of 'this->' in those member functions so we see how you're accessing/calling those member variables and functions *inside*
+        c) call that member function after your std::cout statement in main.
+        d) you should see 2 (almost) identical messages in the program output for each member function you add:
+            one for the std::cout line, and one for the member function's output
  
-If you need inspiration for what to write, take a look at previously approved student projects in the Slack Workspace channel for this project part.
+ 
+ 3) After you finish, click the [run] button.  Clear up any errors or warnings as best you can.
  */
+
+/*
+ example:
+ */
+#include <iostream>
+namespace Example
+{
+    //a User-Defined Type
+    struct MyFoo
+    {
+        MyFoo() { std::cout << "creating MyFoo" << std::endl; }
+        ~MyFoo() { std::cout << "destroying MyFoo" << std::endl; }
+        
+		// 2a) the member function whose function body is almost identical to the std::cout statement in main.
+        void memberFunc() 
+        { 
+            // 2b) explicitly using 'this' inside this member function.
+            std::cout << "MyFoo returnValue(): " << this->returnValue() << " and MyFoo memberVariable: " << this->memberVariable << std::endl; 
+        }  
+        
+        int returnValue() { return 3; }
+        float memberVariable = 3.14f;
+
+        /*
+        note: the example functions are implemented in-class, and the ctor/dtor show the curly braces on the same line as the function declaration.
+        Do not do this.  Follow the instructions and coding style for the course.
+        */
+    };
+    
+    int main()
+    {
+        //an instance of the User-Defined Type named mf
+        MyFoo mf;
+        
+        // 1) a std::cout statement that uses mf's member variables
+        std::cout << "mf returnValue(): " << mf.returnValue() << " and mf memberVariable: " << mf.memberVariable << std::endl; 
+        
+        // 2c) calling mf's member function.  the member function's body is almost identical to the cout statement above.
+        mf.memberFunc();
+        return 0;
+    }
+}
+
 #include <iostream>
 #include <array>
 /*
@@ -69,7 +98,7 @@ void EnvelopeGenerator::setADSR(int a, int d, int s, int r)
     sustain = s;
     release = r;
 
-    for (int c{0}; c <10; c++)
+    for (int c{0}; c <10; c++) FIXME: use pre-increment, not post-increment https://en.cppreference.com/w/cpp/language/operator_incdec
         sustain = c;
 }
 
@@ -184,8 +213,8 @@ void Voice::mute()
 
 Voice::Oscillator::Oscillator() : oscType(1), sync(false)
 {
-    for (int j{0}; j< 10; ++j)
-        sync = true;
+    for (int j{0}; j< 10; ++j)  FIXME
+        sync = true;  FIXME:  why are you setting 'sync' to true 10 times in a row?
 
     ADSR.setADSR(0,0,0,0);
 }
@@ -231,10 +260,10 @@ SynthMoog::~SynthMoog()
 
 void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-        voices[voiceNum].osc1.setFrequency(freq);
-        voices[voiceNum].osc2.setFrequency(freq);
-        voices[voiceNum].osc3.setFrequency(freq);
-        voices[voiceNum].osc4.setFrequency(freq);
+        voices[voiceNum].osc1.setFrequency(freq); FIXME: indentation
+        voices[voiceNum].osc2.setFrequency(freq); FIXME: indentation
+        voices[voiceNum].osc3.setFrequency(freq); FIXME: indentation
+        voices[voiceNum].osc4.setFrequency(freq); FIXME: indentation
 }
 
 void SynthMoog::setADSR(int attack, int decay, int sustain, int release)
@@ -249,7 +278,7 @@ void SynthMoog::setLFO(double frequency, int waveform, int modDepth)
 
 void SynthMoog::playChord()
 {
-    for(auto& voice: voices)
+    for(auto& voice: voices) FIXME
         voice.playSound();
 }
 
@@ -282,7 +311,7 @@ KeithEmerson::~KeithEmerson()
 
 void KeithEmerson::activateKeyboardGodMode()
 {
-    for(auto& keyboard: keyboards)
+    for(auto& keyboard: keyboards) FIXME
         keyboard.playChord();   
 }
 
