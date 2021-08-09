@@ -41,14 +41,14 @@ write 3 UDTs below that EACH have:
 If you need inspiration for what to write, take a look at previously approved student projects in the Slack Workspace channel for this project part.
  */
 #include <iostream>
+#include <array>
 /*
  UDT 1:
  */
-class EnvelopeGenerator
+struct EnvelopeGenerator
 {
-public:
-    int m_attack, m_decay, m_sustain, m_release;
-    bool m_inSignalPath {false} ;
+    int attack, decay, sustain, release;
+    bool inSignalPath {false} ;
 
     EnvelopeGenerator();
 
@@ -57,42 +57,41 @@ public:
     void reset();
 };
 
-EnvelopeGenerator::EnvelopeGenerator():m_attack(0), m_decay(0), m_sustain(0), m_release(0)
+EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
 {
 
 }
 
-void EnvelopeGenerator::setADSR(int attack, int decay, int sustain, int release)
+void EnvelopeGenerator::setADSR(int a, int d, int s, int r)
 {
-    m_attack = attack;
-    m_decay = decay;
-    m_sustain = sustain;
-    m_release = release;
+    attack = a;
+    decay = d;
+    sustain = s;
+    release = r;
 
-    for (int c= 0; c <10; c++)
-        m_sustain = c;
+    for (int c{0}; c <10; c++)
+        sustain = c;
 }
 
-void EnvelopeGenerator::connect(bool inSignalPath)
+void EnvelopeGenerator::connect(bool inPath)
 {
-    m_inSignalPath = inSignalPath;
+    inSignalPath = inPath;
 }
 
 void EnvelopeGenerator::reset()
 {
-    m_attack = m_decay = m_sustain = m_release = 0;
+    attack = decay = sustain = release = 0;
 }
 /*
  UDT 2:
  */
-class LowFreqOscillator
+struct LowFreqOscillator
 {
-public:
-    double  m_frequency;
-    int     m_waveform; 
-    int     m_modDepth;
-    bool    m_tapTempo {false};
-    bool    m_isActive {false};
+    double  frequency;
+    int     waveform; 
+    int     modDepth;
+    bool    tapTempo {false};
+    bool    isActive {false};
 
     LowFreqOscillator();
 
@@ -101,121 +100,118 @@ public:
     void setParams(double frequency, int waveform, int modDepth); 
 };
 
-LowFreqOscillator::LowFreqOscillator():m_frequency(440),m_waveform(0), m_modDepth(0)
+LowFreqOscillator::LowFreqOscillator() : frequency(440), waveform(0), modDepth(0)
 {
-    for (int c = 10; c < 100; ++c)
+    for (int c{10}; c < 100; ++c)
     {   
-        m_frequency = c;
+        frequency = c;
     }
 
-    m_tapTempo = false;
+    tapTempo = false;
 }
 
 void LowFreqOscillator::enable()
 {
-    m_isActive = true;
+    isActive = true;
 }
 
 void LowFreqOscillator::disable()
 {
-    m_isActive = false;
+    isActive = false;
 }
 
-void LowFreqOscillator::setParams(double frequency, int waveform, int modDepth)
+void LowFreqOscillator::setParams(double freq, int wave, int mod)
 {
-    m_frequency = frequency;
-    m_waveform = waveform;
-    m_modDepth = modDepth;
+    frequency = freq;
+    waveform = wave;
+    modDepth = mod;
 }
 /*
  UDT 3:
  */
-class Voice
+struct Voice
 {
-public:
     Voice();
 
     void initialize();
     void playSound();
     void mute();
 
-    class Oscillator
+    struct Oscillator
     {
-    public:
         Oscillator();
 
         void setFrequency(float freq);
         void setWaveform(int freq);
         void setOscType(int type);
 
-        EnvelopeGenerator m_ADSR;
-        float m_frequency;
-        int m_oscType, m_waveform;
-        bool m_sync;
+        EnvelopeGenerator ADSR;
+        float frequency;
+        int oscType, waveform;
+        bool sync;
     };
     
-    Oscillator m_Osc1, m_Osc2, m_Osc3, m_Osc4;
-    bool m_mute {true};
+    Oscillator osc1, osc2, osc3, osc4;
+    bool isMute; 
 };
 
-Voice::Voice():m_mute(true)
+Voice::Voice():isMute(true)
 {
     initialize();
 }
 
 void Voice::initialize()
 {
-    m_Osc1.setWaveform(1);
-    m_Osc2.setWaveform(2);
-    m_Osc3.setWaveform(1);
-    m_Osc4.setWaveform(2);
+    osc1.setWaveform(1);
+    osc2.setWaveform(2);
+    osc3.setWaveform(1);
+    osc4.setWaveform(2);
 }
 
 void Voice::playSound()
 {
     // play C Maj 7
-    m_Osc1.setFrequency(130.813f);
-    m_Osc2.setFrequency(164.814f);
-    m_Osc3.setFrequency(195.998f);
-    m_Osc3.setFrequency(246.942f);
+    osc1.setFrequency(130.813f);
+    osc2.setFrequency(164.814f);
+    osc3.setFrequency(195.998f);
+    osc3.setFrequency(246.942f);
 }
 
 void Voice::mute()
 {
-    m_mute = true;
+    isMute = true;
 }
 
-Voice::Oscillator::Oscillator():m_oscType(1),m_sync(false)
+Voice::Oscillator::Oscillator() : oscType(1), sync(false)
 {
-    for (int j = 0; j< 10; j++)
-        m_sync = true;
+    for (int j{0}; j< 10; ++j)
+        sync = true;
 
-    m_ADSR.setADSR(0,0,0,0);
+    ADSR.setADSR(0,0,0,0);
 }
 
 void Voice::Oscillator::setFrequency(float freq)
 {
-    m_frequency = freq;
+    frequency = freq;
 }
 
-void Voice::Oscillator::setWaveform(int waveform)
+void Voice::Oscillator::setWaveform(int wave)
 {
-    m_waveform = waveform;
+    waveform = wave;
 }
 /*
  new UDT 4:
  */
-class synthMoog
+struct SynthMoog
 {
-public:
-    Voice m_Voice[4];
-    LowFreqOscillator m_LFO;
-    EnvelopeGenerator m_envGen;
+    std::array<Voice, 4> voices;
+    LowFreqOscillator lfo;
+    EnvelopeGenerator envGen;
 
-    synthMoog();
-    ~synthMoog();
+    SynthMoog();
+    ~SynthMoog();
 
-    void setVoiceFreq(int VoiceNum, float freq = 440);
+    void setVoiceFreq(unsigned int VoiceNum, float freq = 440);
     void setADSR(int attack, int decay, int sustain, int release);
     void setLFO(double frequency, int waveform, int modDepth);
     void playChord();
@@ -223,80 +219,71 @@ public:
 };
 
 
-synthMoog::synthMoog()
+SynthMoog::SynthMoog()
 {
 
 }
 
-synthMoog::~synthMoog()
+SynthMoog::~SynthMoog()
 {
-    std::cout << "Calling DTOR - synthMoog" << std::endl; 
+    std::cout << "Calling DTOR - SynthMoog" << std::endl; 
 }
 
-void synthMoog::setVoiceFreq(int voiceNum, float freq)
+void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-    for (int c = 0; c < 4; c++)
-    {
-        m_Voice[voiceNum].m_Osc1.setFrequency(freq);
-        m_Voice[voiceNum].m_Osc2.setFrequency(freq);
-        m_Voice[voiceNum].m_Osc3.setFrequency(freq);
-        m_Voice[voiceNum].m_Osc4.setFrequency(freq);
-    }
+        voices[voiceNum].osc1.setFrequency(freq);
+        voices[voiceNum].osc2.setFrequency(freq);
+        voices[voiceNum].osc3.setFrequency(freq);
+        voices[voiceNum].osc4.setFrequency(freq);
 }
 
-void synthMoog::setADSR(int attack, int decay, int sustain, int release)
+void SynthMoog::setADSR(int attack, int decay, int sustain, int release)
 {
-    m_envGen.setADSR(attack, decay, sustain, release);
+    envGen.setADSR(attack, decay, sustain, release);
 }
 
-void synthMoog::setLFO(double frequency, int waveform, int modDepth)
+void SynthMoog::setLFO(double frequency, int waveform, int modDepth)
 {
-    m_LFO.setParams(frequency, waveform, modDepth);
+    lfo.setParams(frequency, waveform, modDepth);
 }
 
-void synthMoog::playChord()
+void SynthMoog::playChord()
 {
-    for (int voiceNum = 0; voiceNum < 4; voiceNum++)
-    {
-        m_Voice[voiceNum].playSound();
-        m_Voice[voiceNum].playSound();
-        m_Voice[voiceNum].playSound();
-        m_Voice[voiceNum].playSound();
-    }
+    for(auto& voice: voices)
+        voice.playSound();
 }
 
-std::string synthMoog::getModelName()
+std::string SynthMoog::getModelName()
 {
     return "Emerson Moog Modular";
 }
 /*
  new UDT 5:
  */
-class keithEmerson
+struct KeithEmerson
 {
-public:
-    keithEmerson();
-    ~keithEmerson();
+    KeithEmerson();
+    ~KeithEmerson();
 
-    synthMoog m_keyboards[15];
+    std::array<SynthMoog, 15> keyboards;
 
     void activateKeyboardGodMode();
 };
 
-keithEmerson::keithEmerson()
+KeithEmerson::KeithEmerson()
 {
 
 }
 
-keithEmerson::~keithEmerson()
+KeithEmerson::~KeithEmerson()
 {
-    std::cout << "Calling DTOR - keithEmerson. RIP" << std::endl; 
+    std::cout << "Calling DTOR - KeithEmerson. RIP" << std::endl; 
 }
 
-void keithEmerson::activateKeyboardGodMode()
+void KeithEmerson::activateKeyboardGodMode()
 {
-    for (int c = 0; c < 15; c++)
-        m_keyboards[c].playChord();
+    for(auto& keyboard: keyboards)
+        keyboard.playChord();   
 }
 
 
@@ -318,35 +305,35 @@ int main()
     EnvelopeGenerator envGen1, envGen2;
     envGen1.setADSR(10,20,30,40);
     envGen2.setADSR(40,30,20,10);
-    std::cout << "envGen1's Attack is: " << envGen1.m_attack << std::endl;
-    std::cout << "envGen2's Attack is: " << envGen2.m_attack << std::endl;
+    std::cout << "envGen1's Attack is: " << envGen1.attack << std::endl;
+    std::cout << "envGen2's Attack is: " << envGen2.attack << std::endl;
 
     LowFreqOscillator lfo1, lfo2;
     lfo1.setParams(880, 1, 5);
     lfo2.setParams(440, 2, 35);
-    std::cout << "lfo1's Frequency is: " << lfo1.m_frequency << std::endl;
-    std::cout << "lof2's Mod Depth is: " << lfo2.m_modDepth << std::endl;
+    std::cout << "lfo1's Frequency is: " << lfo1.frequency << std::endl;
+    std::cout << "lof2's Mod Depth is: " << lfo2.modDepth << std::endl;
 
     Voice voice1, voice2;
-    int attack = voice1.m_Osc1.m_ADSR.m_attack;
+    int attack = voice1.osc1.ADSR.attack;
     std::cout << "Voice 1's Oscillator 1 attack is: " << attack << 
     std::endl;
-    float frequency = voice2.m_Osc1.m_frequency;
+    float frequency = voice2.osc1.frequency;
     std::cout << "Voice 2's Oscillator 1 frequency is: " << frequency << std::endl;
 
 
-    synthMoog synth1, synth2;
+    SynthMoog synth1, synth2;
     synth1.setLFO(30, 1, 10);
     synth2.setLFO(60, 2, 20);
-    std::cout << "Synth 1's LFO frequency is: " << synth1.m_LFO.m_frequency << std::endl;
-    std::cout << "Synth 2's LFO frequency is: " << synth2.m_LFO.m_frequency << std::endl;
+    std::cout << "Synth 1's LFO frequency is: " << synth1.lfo.frequency << std::endl;
+    std::cout << "Synth 2's LFO frequency is: " << synth2.lfo.frequency << std::endl;
 
-    keithEmerson keith1, keith2;
+    KeithEmerson keith1, keith2;
     keith1.activateKeyboardGodMode();
-    std::cout << "Kieth 1's synth is an " << keith1.m_keyboards[0].getModelName() << std::endl;
+    std::cout << "Kieth 1's synth is an " << keith1.keyboards[0].getModelName() << std::endl;
 
     keith2.activateKeyboardGodMode();
-    std::cout << "Kieth 2's synth is an " << keith2.m_keyboards[0].getModelName() << std::endl;
+    std::cout << "Kieth 2's synth is an " << keith2.keyboards[0].getModelName() << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
