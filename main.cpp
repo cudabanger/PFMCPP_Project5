@@ -48,8 +48,9 @@ You don't have to do this, you can keep your current object name and just change
 
 
 
-#include <iostream>
+//#include <iostream>
 #include <array>
+#include "LeakedObjectDetector.h"
 /*
  UDT 1:
  */
@@ -65,6 +66,8 @@ struct EnvelopeGenerator
     void reset();
     int getAttack();
     void printAttackMsg();
+
+    JUCE_LEAK_DETECTOR(EnvelopeGenerator)
 };
 
 EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
@@ -122,6 +125,8 @@ struct LowFreqOscillator
     int getModDepth(); 
     void printFrequencyMsg();
     void printModDepthMsg();
+
+    JUCE_LEAK_DETECTOR(LowFreqOscillator)
 };
 
 LowFreqOscillator::LowFreqOscillator() : frequency(440), waveform(0), modDepth(0)
@@ -196,10 +201,14 @@ struct Voice
         float frequency;
         int oscType, waveform;
         bool sync;
+
+        JUCE_LEAK_DETECTOR(Oscillator)
     };
     
     Oscillator osc1, osc2, osc3, osc4;
     bool isMute; 
+
+    JUCE_LEAK_DETECTOR(Voice)
 };
 
 Voice::Voice():isMute(true)
@@ -283,6 +292,8 @@ struct SynthMoog
     std::string getModelName();
 
     void printLFOFrequency();
+
+    JUCE_LEAK_DETECTOR(SynthMoog)
 };
 
 
@@ -342,6 +353,8 @@ struct KeithEmerson
     void activateKeyboardGodMode();
     SynthMoog& getKeyboard(unsigned int whichKeyboard);
     void printModelName();
+
+    JUCE_LEAK_DETECTOR(KeithEmerson)
 };
 
 KeithEmerson::KeithEmerson()
@@ -385,52 +398,78 @@ void KeithEmerson::printModelName()
  Wait for my code review.
  */
 
-//#include <iostream>
+// Wrapper definitions
+struct EnvelopeGeneratorWrapper
+{
+    EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt) : udt1(_udt) { }
+    ~EnvelopeGeneratorWrapper() { delete udt1; }
+    EnvelopeGenerator* udt1 = nullptr;
+};
+
+struct LowFreqOscillatorWrapper
+{
+    LowFreqOscillatorWrapper(LowFreqOscillator* _udt) : udt1(_udt) { }
+    ~LowFreqOscillatorWrapper() { delete udt1; }
+    LowFreqOscillator* udt1 = nullptr;
+};
+
+struct VoiceWrapper
+{
+    VoiceWrapper(Voice* _udt) : udt1(_udt) { }
+    ~VoiceWrapper() { delete udt1; }
+    Voice* udt1 = nullptr;
+};
+
+struct SynthMoogWrapper
+{
+    SynthMoogWrapper(SynthMoog* _udt) : udt1(_udt) { }
+    ~SynthMoogWrapper() { delete udt1; }
+    SynthMoog* udt1 = nullptr;
+};
+
+struct KeithEmersonWrapper
+{
+    KeithEmersonWrapper(KeithEmerson* _udt) : udt1(_udt) { }
+    ~KeithEmersonWrapper() { delete udt1; }
+    KeithEmerson* udt1 = nullptr;
+};
+
+#include <iostream>
 int main()
 {
     // instantiate 2 each of the 5 required UDTs
-    EnvelopeGenerator envGen1, envGen2;
-    envGen1.setADSR(10,20,30,40);
-    envGen2.setADSR(40,30,20,10);
-    std::cout << "envGen1's Attack is: " << envGen1.attack << std::endl;
-    envGen1.printAttackMsg();
+    EnvelopeGeneratorWrapper envWrapper1( new EnvelopeGenerator() );
+    EnvelopeGeneratorWrapper envWrapper2( new EnvelopeGenerator() );
+    envWrapper1.udt1->setADSR(10,20,30,40);
+    envWrapper2.udt1->setADSR(10,20,30,40);
+    envWrapper1.udt1->printAttackMsg();
+    envWrapper2.udt1->printAttackMsg();
 
-    std::cout << "envGen2's Attack is: " << envGen2.attack << std::endl;
-    envGen2.printAttackMsg();
+    LowFreqOscillatorWrapper lfoWrapper1( new LowFreqOscillator() );
+    LowFreqOscillatorWrapper lfoWrapper2( new LowFreqOscillator() );
+    lfoWrapper1.udt1->setParams(880, 1, 5);
+    lfoWrapper2.udt1->setParams(440, 2, 35);
+    lfoWrapper1.udt1->printFrequencyMsg();
+    lfoWrapper2.udt1->printModDepthMsg();
 
-    LowFreqOscillator lfo1, lfo2;
-    lfo1.setParams(880, 1, 5);
-    lfo2.setParams(440, 2, 35);
-    std::cout << "lfo1's Frequency is: " << lfo1.frequency << std::endl;
-    lfo1.printFrequencyMsg();
-    std::cout << "lof2's Mod Depth is: " << lfo2.modDepth << std::endl;
-    lfo2.printModDepthMsg();
+    VoiceWrapper voiceWrapper1( new Voice() );
+    VoiceWrapper voiceWrapper2( new Voice() );
+    voiceWrapper1.udt1->printFrequencyMsg();
+    voiceWrapper2.udt1->printAttackMsg();
 
-    Voice voice1, voice2;
-    int attack = voice1.osc1.ADSR.attack;
-    std::cout << "Voice 1's Oscillator 1 attack is: " << attack << 
-    std::endl;
-    voice1.printFrequencyMsg();
-    float frequency = voice2.osc1.frequency;
-    std::cout << "Voice 2's Oscillator 1 frequency is: " << frequency << std::endl;
-    voice2.printAttackMsg();
+    SynthMoogWrapper synthWrapper1( new SynthMoog() );
+    SynthMoogWrapper synthWrapper2( new SynthMoog() );
+    synthWrapper1.udt1->setLFO(30, 1, 10);
+    synthWrapper2.udt1->setLFO(60, 2, 20);
+    synthWrapper1.udt1->printLFOFrequency();
+    synthWrapper2.udt1->printLFOFrequency();
 
-    SynthMoog synth1, synth2;
-    synth1.setLFO(30, 1, 10);
-    synth2.setLFO(60, 2, 20);
-    std::cout << "Synth 1's LFO frequency is: " << synth1.lfo.frequency << std::endl;
-    synth1.printLFOFrequency();
-    std::cout << "Synth 2's LFO frequency is: " << synth2.lfo.frequency << std::endl;
-    synth2.printLFOFrequency();
-
-    KeithEmerson keith1, keith2;
-    keith1.activateKeyboardGodMode();
-    std::cout << "Kieth 1's synth is an " << keith1.keyboards[0].getModelName() << std::endl;
-    keith1.printModelName();
-
-    keith2.activateKeyboardGodMode();
-    std::cout << "Kieth 2's synth is an " << keith2.keyboards[0].getModelName() << std::endl;
-    keith2.printModelName();
+    KeithEmersonWrapper keithWrapper1( new KeithEmerson() );
+    KeithEmersonWrapper keithWrapper2( new KeithEmerson() );
+    keithWrapper1.udt1->activateKeyboardGodMode();
+    keithWrapper1.udt1->printModelName();
+    keithWrapper2.udt1->activateKeyboardGodMode();
+    keithWrapper2.udt1->printModelName();
 
     std::cout << "good to go!" << std::endl;
 }
