@@ -48,7 +48,6 @@ You don't have to do this, you can keep your current object name and just change
 
 
 
-//#include <iostream>
 #include <array>
 #include "LeakedObjectDetector.h"
 /*
@@ -204,8 +203,19 @@ struct Voice
 
         JUCE_LEAK_DETECTOR(Oscillator)
     };
+
+    struct OscillatorWrapper
+    {
+        OscillatorWrapper(Oscillator* _udt) : udt1(_udt) { }
+        ~OscillatorWrapper() { delete udt1; }
+        Oscillator* udt1 = nullptr;
+    };
     
-    Oscillator osc1, osc2, osc3, osc4;
+    //Oscillator osc1, osc2, osc3, osc4;
+    OscillatorWrapper oscWrapper1( new Oscillator(); );
+    OscillatorWrapper oscWrapper2( new Oscillator(); );
+    OscillatorWrapper oscWrapper3( new Oscillator(); );
+    OscillatorWrapper oscWrapper4( new Oscillator(); );
     bool isMute; 
 
     JUCE_LEAK_DETECTOR(Voice)
@@ -218,19 +228,19 @@ Voice::Voice():isMute(true)
 
 void Voice::initialize()
 {
-    osc1.setWaveform(1);
-    osc2.setWaveform(2);
-    osc3.setWaveform(1);
-    osc4.setWaveform(2);
+    oscWrapper1->setWaveform(1);
+    oscWrapper2->setWaveform(2);
+    oscWrapper3->setWaveform(1);
+    oscWrapper4->setWaveform(2);
 }
 
 void Voice::playSound()
 {
     // play C Maj 7
-    osc1.setFrequency(130.813f);
-    osc2.setFrequency(164.814f);
-    osc3.setFrequency(195.998f);
-    osc3.setFrequency(246.942f);
+    oscWrapper1->setFrequency(130.813f);
+    oscWrapper2->setFrequency(164.814f);
+    oscWrapper3->setFrequency(195.998f);
+    oscWrapper4->setFrequency(246.942f);
 }
 
 void Voice::mute()
@@ -260,18 +270,18 @@ void Voice::Oscillator::setWaveform(int wave)
 
 float Voice::Oscillator::getFrequency()
 {
-    return this->frequency;
+    return frequency;
 }
 
 void Voice::printAttackMsg()
 {
-    std::cout << "Voice's Oscillator 1 attack is: " << this->osc1.ADSR.getAttack() << 
+    std::cout << "Voice's Oscillator 1 attack is: " << oscWrapper1->ADSR.getAttack() << 
     std::endl;
 }
 
 void Voice::printFrequencyMsg()
 {
-    std::cout << "Voice's Oscillator 1 frequency is: " << this->osc1.getFrequency() << std::endl;
+    std::cout << "Voice's Oscillator 1 frequency is: " << oscWrapper1->getFrequency() << std::endl;
 }
 /*
  new UDT 4:
