@@ -50,6 +50,7 @@ You don't have to do this, you can keep your current object name and just change
 
 #include <array>
 #include "LeakedObjectDetector.h"
+#include <memory>
 /*
  UDT 1:
  */
@@ -210,12 +211,12 @@ struct Voice
         ~OscillatorWrapper() { delete udt1; }
         Oscillator* udt1 = nullptr;
     };
-    
-    //Oscillator osc1, osc2, osc3, osc4;
-    OscillatorWrapper oscWrapper1( new Oscillator(); );
-    OscillatorWrapper oscWrapper2( new Oscillator(); );
-    OscillatorWrapper oscWrapper3( new Oscillator(); );
-    OscillatorWrapper oscWrapper4( new Oscillator(); );
+
+    OscillatorWrapper oscWrapper1{ new Oscillator };
+    OscillatorWrapper oscWrapper2{ new Oscillator };
+    OscillatorWrapper oscWrapper3{ new Oscillator };
+    OscillatorWrapper oscWrapper4{ new Oscillator };
+
     bool isMute; 
 
     JUCE_LEAK_DETECTOR(Voice)
@@ -228,19 +229,19 @@ Voice::Voice():isMute(true)
 
 void Voice::initialize()
 {
-    oscWrapper1->setWaveform(1);
-    oscWrapper2->setWaveform(2);
-    oscWrapper3->setWaveform(1);
-    oscWrapper4->setWaveform(2);
+    oscWrapper1.udt1->setWaveform(1);
+    oscWrapper2.udt1->setWaveform(2);
+    oscWrapper3.udt1->setWaveform(1);
+    oscWrapper4.udt1->setWaveform(2);
 }
 
 void Voice::playSound()
 {
     // play C Maj 7
-    oscWrapper1->setFrequency(130.813f);
-    oscWrapper2->setFrequency(164.814f);
-    oscWrapper3->setFrequency(195.998f);
-    oscWrapper4->setFrequency(246.942f);
+    oscWrapper1.udt1->setFrequency(130.813f);
+    oscWrapper2.udt1->setFrequency(164.814f);
+    oscWrapper3.udt1->setFrequency(195.998f);
+    oscWrapper4.udt1->setFrequency(246.942f);
 }
 
 void Voice::mute()
@@ -275,13 +276,13 @@ float Voice::Oscillator::getFrequency()
 
 void Voice::printAttackMsg()
 {
-    std::cout << "Voice's Oscillator 1 attack is: " << oscWrapper1->ADSR.getAttack() << 
-    std::endl;
+//    std::cout << "Voice's Oscillator 1 attack is: " << osc1->ADSR.getAttack() << 
+//    std::endl;
 }
 
 void Voice::printFrequencyMsg()
 {
-    std::cout << "Voice's Oscillator 1 frequency is: " << oscWrapper1->getFrequency() << std::endl;
+//    std::cout << "Voice's Oscillator 1 frequency is: " << osc1->getFrequency() << std::endl;
 }
 /*
  new UDT 4:
@@ -319,10 +320,10 @@ SynthMoog::~SynthMoog()
 
 void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-    voices[voiceNum].osc1.setFrequency(freq);
-    voices[voiceNum].osc2.setFrequency(freq);
-    voices[voiceNum].osc3.setFrequency(freq);
-    voices[voiceNum].osc4.setFrequency(freq);
+    voices[voiceNum].oscWrapper1.udt1->setFrequency(freq);
+    voices[voiceNum].oscWrapper2.udt1->setFrequency(freq);
+    voices[voiceNum].oscWrapper3.udt1->setFrequency(freq);
+    voices[voiceNum].oscWrapper4.udt1->setFrequency(freq);
 }
 
 void SynthMoog::setADSR(int attack, int decay, int sustain, int release)
