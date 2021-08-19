@@ -22,7 +22,7 @@ Create a branch named Part3
 #if false
  Axe axe;
  std::cout << "axe sharpness: " << axe.sharpness << "\n";
- #endif
+#endif
  /*
     you would update that to use your wrappers:
     
@@ -503,38 +503,43 @@ struct KeithEmersonWrapper
 int main()
 {
     // instantiate 2 each of the 5 required UDTs
-    EnvelopeGeneratorWrapper envWrapper1( new EnvelopeGenerator() );
-    EnvelopeGeneratorWrapper envWrapper2( new EnvelopeGenerator() );
-    envWrapper1.udt1->setADSR(10,20,30,40);
-    envWrapper2.udt1->setADSR(10,20,30,40);
-    envWrapper1.udt1->printAttackMsg();
-    envWrapper2.udt1->printAttackMsg();
+    EnvelopeGeneratorWrapper envGen1( new EnvelopeGenerator() ), envGen2( new EnvelopeGenerator() );
+    envGen1.udt1->setADSR(10,20,30,40);
+    envGen2.udt1->setADSR(10,20,30,40);
+    std::cout << "envGen1's Attack is: " << envGen1.udt1->attack << std::endl;
+    envGen1.udt1->printAttackMsg();
+    std::cout << "envGen2's Attack is: " << envGen2.udt1->attack << std::endl;
+    envGen2.udt1->printAttackMsg();
 
-    LowFreqOscillatorWrapper lfoWrapper1( new LowFreqOscillator() );
-    LowFreqOscillatorWrapper lfoWrapper2( new LowFreqOscillator() );
-    lfoWrapper1.udt1->setParams(880, 1, 5);
-    lfoWrapper2.udt1->setParams(440, 2, 35);
-    lfoWrapper1.udt1->printFrequencyMsg();
-    lfoWrapper2.udt1->printModDepthMsg();
+    LowFreqOscillatorWrapper lfo1( new LowFreqOscillator() ), lfo2( new LowFreqOscillator() );
+    lfo1.udt1->setParams(880, 1, 5);
+    lfo2.udt1->setParams(440, 2, 35);
+    std::cout << "lfo1's Frequency is: " << lfo1.udt1->frequency << std::endl;
+    lfo1.udt1->printFrequencyMsg();
+    std::cout << "lof2's Mod Depth is: " << lfo2.udt1->modDepth << std::endl;
+    lfo2.udt1->printModDepthMsg();
 
-    VoiceWrapper voiceWrapper1( new Voice() );
-    VoiceWrapper voiceWrapper2( new Voice() );
-    voiceWrapper1.udt1->printFrequencyMsg();
-    voiceWrapper2.udt1->printAttackMsg();
+    VoiceWrapper voice1( new Voice() ), voice2( new Voice() );
+    std::cout << "Voice 1's Oscillator 1 attack is: " << voice1.udt1->oscWrapper1.udt1->ADSR.attack << std::endl;
+    voice1.udt1->printFrequencyMsg();
+    std::cout << "Voice 2's Oscillator 1 frequency is: " << voice2.udt1->oscWrapper1.udt1->frequency << std::endl;
+    voice2.udt1->printAttackMsg();
 
-    SynthMoogWrapper synthWrapper1( new SynthMoog() );
-    SynthMoogWrapper synthWrapper2( new SynthMoog() );
-    synthWrapper1.udt1->setLFO(30, 1, 10);
-    synthWrapper2.udt1->setLFO(60, 2, 20);
-    synthWrapper1.udt1->printLFOFrequency();
-    synthWrapper2.udt1->printLFOFrequency();
+    SynthMoogWrapper synth1( new SynthMoog() ), synth2( new SynthMoog() );
+    synth1.udt1->setLFO(30, 1, 10);
+    synth2.udt1->setLFO(60, 2, 20);
+    std::cout << "Synth 1's LFO frequency is: " << synth1.udt1->lfo.frequency << std::endl;
+    synth1.udt1->printLFOFrequency();
+    std::cout << "Synth 2's LFO frequency is: " << synth2.udt1->lfo.frequency << std::endl;
+    synth2.udt1->printLFOFrequency();
 
-    KeithEmersonWrapper keithWrapper1( new KeithEmerson() );
-    KeithEmersonWrapper keithWrapper2( new KeithEmerson() );
-    keithWrapper1.udt1->activateKeyboardGodMode();
-    keithWrapper1.udt1->printModelName();
-    keithWrapper2.udt1->activateKeyboardGodMode();
-    keithWrapper2.udt1->printModelName();
+    KeithEmersonWrapper keith1( new KeithEmerson() ), keith2( new KeithEmerson() );
+    keith1.udt1->activateKeyboardGodMode();
+    std::cout << "Kieth 1's synth is an " << keith1.udt1->keyboards[0].getModelName() << std::endl;
+    keith1.udt1->printModelName();
+    keith2.udt1->activateKeyboardGodMode();
+    std::cout << "Kieth 2's synth is an " << keith2.udt1->keyboards[0].getModelName() << std::endl;
+    keith2.udt1->printModelName();
 
     std::cout << "good to go!" << std::endl;
 }
