@@ -305,8 +305,7 @@ Voice::Oscillator::Oscillator() : oscType(1), sync(false)
 {
     for (int j{0}; j < 10; ++j)
     {  
-        sync = true;  //FIXME:  why are you setting 'sync' to true 10 times in a row?
-        // ANSWER: same reason there's a needless loop here.  Pedagogy.
+        sync = true;  
     }
     ADSR.setADSR(0,0,0,0);
 }
