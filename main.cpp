@@ -71,6 +71,7 @@ struct EnvelopeGenerator
     struct VCA
     { // 5 member variables 3 member functions constructors and loops.
         VCA();
+        ~VCA() { }
 
         void initialize();
         void trigger();
@@ -262,9 +263,6 @@ struct Voice
         ~OscillatorWrapper() { delete udt1; }
         Oscillator* udt1 = nullptr;
     };
-    // conflicting instructions:
-    // "NO IN CLASS DEFINITIONS ALLOWED"
-    // "write wrapper classes for each type similar to how it was shown in the video" 
 
     OscillatorWrapper oscWrapper1{ new Oscillator };
     OscillatorWrapper oscWrapper2{ new Oscillator };
@@ -330,13 +328,13 @@ float Voice::Oscillator::getFrequency()
 
 void Voice::printAttackMsg()
 {
-//    std::cout << "Voice's Oscillator 1 attack is: " << osc1->ADSR.getAttack() << 
-//    std::endl;
+    std::cout << "Voice's Oscillator 1 attack is: " << oscWrapper1.udt1->ADSR.getAttack() << 
+    std::endl;
 }
 
 void Voice::printFrequencyMsg()
 {
-//    std::cout << "Voice's Oscillator 1 frequency is: " << osc1->getFrequency() << std::endl;
+    std::cout << "Voice's Oscillator 1 frequency is: " << oscWrapper1.udt1->getFrequency() << std::endl;
 }
 /*
  new UDT 4:
@@ -374,10 +372,13 @@ SynthMoog::~SynthMoog()
 
 void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-    voices[voiceNum].oscWrapper1.udt1->setFrequency(freq);
-    voices[voiceNum].oscWrapper2.udt1->setFrequency(freq);
-    voices[voiceNum].oscWrapper3.udt1->setFrequency(freq);
-    voices[voiceNum].oscWrapper4.udt1->setFrequency(freq);
+    if ( voiceNum <=3 )
+    {
+        voices[voiceNum].oscWrapper1.udt1->setFrequency(freq);
+        voices[voiceNum].oscWrapper2.udt1->setFrequency(freq);
+        voices[voiceNum].oscWrapper3.udt1->setFrequency(freq);
+        voices[voiceNum].oscWrapper4.udt1->setFrequency(freq);
+    }
 }
 
 void SynthMoog::setADSR(int attack, int decay, int sustain, int release)
