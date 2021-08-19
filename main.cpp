@@ -50,14 +50,13 @@ You don't have to do this, you can keep your current object name and just change
 
 #include <array>
 #include "LeakedObjectDetector.h"
-#include <memory>
 /*
- UDT 1:
+ UDT 1:  With Nested UDT 1 of 2
  */
 struct EnvelopeGenerator
 {
     int attack, decay, sustain, release;
-    bool inSignalPath {false} ;
+    bool inSignalPath { false } ;
 
     EnvelopeGenerator();
 
@@ -68,7 +67,59 @@ struct EnvelopeGenerator
     void printAttackMsg();
 
     JUCE_LEAK_DETECTOR(EnvelopeGenerator)
+    
+    struct VCA
+    { // 5 member variables 3 member functions constructors and loops.
+        VCA();
+
+        void initialize();
+        void trigger();
+        void silence();
+
+        float gain;
+        bool leadingEdge;
+        bool reTrigger;
+        bool fuzzy;
+        bool gate;
+
+        JUCE_LEAK_DETECTOR(VCA)
+    };
+
+    struct VCAWrapper
+    {
+        VCAWrapper(VCA* _udt) : udt1(_udt) { }
+        ~VCAWrapper() { delete udt1; }
+        VCA* udt1 = nullptr;
+    };
+
+    VCAWrapper vcaWrapper1{ new VCA };
 };
+
+EnvelopeGenerator::VCA::VCA() : gain(1), leadingEdge(false), reTrigger(false) 
+{
+    initialize();
+    gate = false;
+}
+
+void EnvelopeGenerator::VCA::initialize()
+{
+    for (int j{ 0 }; j < 10; ++j)
+    {  
+        gain = j;  
+    }
+    fuzzy = false;
+    gate = false;
+}
+
+void EnvelopeGenerator::VCA::trigger()
+{
+    gain = 25;
+}
+
+void EnvelopeGenerator::VCA::silence()
+{
+    gain = 0;
+}
 
 EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
 {
@@ -176,7 +227,7 @@ void LowFreqOscillator::printModDepthMsg()
     std::cout << "lfo's Mod Depth is: " << this->getModDepth() << std::endl;    
 }
 /*
- UDT 3:
+ UDT 3: With Nested UDT 2 of 2
  */
 struct Voice
 {
@@ -211,6 +262,9 @@ struct Voice
         ~OscillatorWrapper() { delete udt1; }
         Oscillator* udt1 = nullptr;
     };
+    // conflicting instructions:
+    // "NO IN CLASS DEFINITIONS ALLOWED"
+    // "write wrapper classes for each type similar to how it was shown in the video" 
 
     OscillatorWrapper oscWrapper1{ new Oscillator };
     OscillatorWrapper oscWrapper2{ new Oscillator };
