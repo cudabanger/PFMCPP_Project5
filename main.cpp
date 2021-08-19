@@ -92,7 +92,7 @@ struct EnvelopeGenerator
         VCA* udt1 = nullptr;
     };
 
-    VCAWrapper vcaWrapper1{ new VCA };
+    VCAWrapper vcaWrapper{ new VCA };
 };
 
 EnvelopeGenerator::VCA::VCA() : gain(1), leadingEdge(false), reTrigger(false) 
@@ -123,7 +123,7 @@ void EnvelopeGenerator::VCA::silence()
 
 EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
 {
-
+    vcaWrapper.udt1->initialize();
 }
 
 void EnvelopeGenerator::setADSR(int a, int d, int s, int r)
