@@ -1,8 +1,20 @@
 #include "Wrappers.h"
 
 #include "KeithEmerson.h"
+// This is the problem here and the problem is specific to the nested class
+EnvelopeGenerator::VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
+udt1(_udt)
+{
+
+}
+
+EnvelopeGenerator::VCAWrapper::~VCAWrapper()
+{
+    delete udt1;
+}
 
 
+////////////////////// Everything works from here.
 EnvelopeGeneratorWrapper::EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt) :
 udt1(_udt)
 {

@@ -1,19 +1,6 @@
 #pragma once
 
-/*
-// forward declarations
 //#include "EnvelopeGenerator.h"
-struct EnvelopeGenerator;
-struct VCA;
-
-// definitions
-struct VCAWrapper
-{
-    VCAWrapper(EnvelopeGenerator::VCA* _udt) : udt1(_udt) { }
-    ~VCAWrapper() { delete udt1; }
-    EnvelopeGenerator::VCA* udt1 = nullptr;
-};
-*/
 
 // Wrapper definitions
 struct EnvelopeGenerator;
@@ -60,4 +47,19 @@ struct KeithEmersonWrapper
     KeithEmerson* udt1 = nullptr;
 };
 
+struct VCA;
+/*struct VCAWrapper
+{
+    VCAWrapper(EnvelopeGenerator::VCA* _udt);
+    ~VCAWrapper();
+    EnvelopeGenerator::VCA* udt1 = nullptr;
+};*/
+
+struct EnvelopeGenerator::VCAWrapper
+{
+    EnvelopeGenerator::VCAWrapper(VCA* _udt);
+    EnvelopeGenerator::~VCAWrapper();
+
+    VCA* udt1 = nullptr;
+};
 
