@@ -1,5 +1,6 @@
-/*#pragma once
+#pragma once
 
+/*
 // forward declarations
 //#include "EnvelopeGenerator.h"
 struct EnvelopeGenerator;
@@ -13,41 +14,50 @@ struct VCAWrapper
     EnvelopeGenerator::VCA* udt1 = nullptr;
 };
 */
-/*
+
 // Wrapper definitions
+struct EnvelopeGenerator;
 struct EnvelopeGeneratorWrapper
 {
-    EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt) : udt1(_udt) { }
-    ~EnvelopeGeneratorWrapper() { delete udt1; }
+    EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt);
+    ~EnvelopeGeneratorWrapper();
     EnvelopeGenerator* udt1 = nullptr;
 };
 
+struct LowFreqOscillator;
 struct LowFreqOscillatorWrapper
 {
-    LowFreqOscillatorWrapper(LowFreqOscillator* _udt) : udt1(_udt) { }
-    ~LowFreqOscillatorWrapper() { delete udt1; }
+    LowFreqOscillatorWrapper(LowFreqOscillator* _udt);
+    ~LowFreqOscillatorWrapper();
+
     LowFreqOscillator* udt1 = nullptr;
 };
 
+struct Voice;
 struct VoiceWrapper
 {
-    VoiceWrapper(Voice* _udt) : udt1(_udt) { }
-    ~VoiceWrapper() { delete udt1; }
+    VoiceWrapper(Voice* _udt);
+    ~VoiceWrapper();
+
     Voice* udt1 = nullptr;
 };
 
+struct SynthMoog;
 struct SynthMoogWrapper
 {
-    SynthMoogWrapper(SynthMoog* _udt) : udt1(_udt) { }
-    ~SynthMoogWrapper() { delete udt1; }
+    SynthMoogWrapper(SynthMoog* _udt);
+    ~SynthMoogWrapper();
+
     SynthMoog* udt1 = nullptr;
 };
 
+struct KeithEmerson;
 struct KeithEmersonWrapper
 {
-    KeithEmersonWrapper(KeithEmerson* _udt) : udt1(_udt) { }
-    ~KeithEmersonWrapper() { delete udt1; }
+    KeithEmersonWrapper(KeithEmerson* _udt);
+    ~KeithEmersonWrapper();
+
     KeithEmerson* udt1 = nullptr;
 };
-*/
+
 
