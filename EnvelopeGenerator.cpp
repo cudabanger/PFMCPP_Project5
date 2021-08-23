@@ -8,7 +8,7 @@ EnvelopeGenerator::VCA::VCA() : gain(1), leadingEdge(false), reTrigger(false)
 
 EnvelopeGenerator::VCA::~VCA()
 {
-    std::cout << "VCA DTOR" << std::endl;
+    //std::cout << "VCA DTOR" << std::endl;
 }
 
 void EnvelopeGenerator::VCA::initialize()
@@ -43,7 +43,7 @@ release(0)
 
 EnvelopeGenerator::~EnvelopeGenerator()
 {
-    //std::cout << "DTOR EnvelopeGenerator" << std::endl;
+
 }
 
 void EnvelopeGenerator::setADSR(int a, int d, int s, int r)

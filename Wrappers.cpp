@@ -2,13 +2,6 @@
 
 #include "KeithEmerson.h"
 
-// This is the problem and is specific to the nested class
-/*EnvelopeGenerator::VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
-udt1(_udt)
-{
-
-}*/
-
 VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
 udt1(_udt)
 {
@@ -20,7 +13,6 @@ VCAWrapper::~VCAWrapper()
     std::cout << "DTOR - VCAWrapper " << std::endl;
     delete udt1;
 }
-
 
 ////////////////////// Everything works from here.
 EnvelopeGeneratorWrapper::EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt) :
