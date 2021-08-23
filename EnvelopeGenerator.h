@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Wrappers.h"
-//struct VCAWrapper;
-
 #include "LeakedObjectDetector.h"
+
 /*
  UDT 1:  With Nested UDT 1 of 2
  */
@@ -13,6 +11,7 @@ struct EnvelopeGenerator
     bool inSignalPath { false } ;
 
     EnvelopeGenerator();
+    ~EnvelopeGenerator();
 
     void setADSR(int attack = 0, int decay = 0, int sustain = 0, int release = 0);
     void connect(bool inSignalPath);
@@ -42,13 +41,10 @@ struct EnvelopeGenerator
 
     // Leaving this wrapper defined here (and removed from Wrappers.h) causes 
     // the rest of the code to work.
-    /*struct VCAWrapper
-    {
-        VCAWrapper(EnvelopeGenerator::VCA* _udt) : udt1(_udt) { }
-        ~VCAWrapper() { delete udt1; }
-        EnvelopeGenerator::VCA* udt1 = nullptr;
-    };*/      
+    /**/      
     
-    VCAWrapper vcaWrapper{ new VCA };
+    //VCAWrapper vcaWrapper{ new VCA };
+    //struct VCAWrapper;
+    VCA vca;
 };
 

@@ -1,15 +1,23 @@
 #include "Wrappers.h"
 
 #include "KeithEmerson.h"
-// This is the problem here and the problem is specific to the nested class
-EnvelopeGenerator::VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
+
+// This is the problem and is specific to the nested class
+/*EnvelopeGenerator::VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
 udt1(_udt)
 {
 
+}*/
+
+VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
+udt1(_udt)
+{
+    std::cout << "CTOR - VCAWrapper " << std::endl;
 }
 
-EnvelopeGenerator::VCAWrapper::~VCAWrapper()
+VCAWrapper::~VCAWrapper()
 {
+    std::cout << "DTOR - VCAWrapper " << std::endl;
     delete udt1;
 }
 

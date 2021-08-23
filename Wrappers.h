@@ -1,9 +1,9 @@
 #pragma once
 
-//#include "EnvelopeGenerator.h"
+#include "EnvelopeGenerator.h"  // Cant forward declare the nested UDT
 
 // Wrapper definitions
-struct EnvelopeGenerator;
+//struct EnvelopeGenerator;
 struct EnvelopeGeneratorWrapper
 {
     EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt);
@@ -47,19 +47,20 @@ struct KeithEmersonWrapper
     KeithEmerson* udt1 = nullptr;
 };
 
-struct VCA;
-/*struct VCAWrapper
+//struct VCA;
+struct VCAWrapper
 {
+    EnvelopeGenerator::VCA* udt1 = nullptr;
+
     VCAWrapper(EnvelopeGenerator::VCA* _udt);
     ~VCAWrapper();
-    EnvelopeGenerator::VCA* udt1 = nullptr;
-};*/
+};
 
-struct EnvelopeGenerator::VCAWrapper
+/*struct EnvelopeGenerator::VCAWrapper
 {
     EnvelopeGenerator::VCAWrapper(VCA* _udt);
     EnvelopeGenerator::~VCAWrapper();
 
     VCA* udt1 = nullptr;
-};
+};*/
 

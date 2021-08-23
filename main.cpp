@@ -36,7 +36,7 @@
 #include "Voice.h"
 #include "SynthMoog.h"
 #include "KeithEmerson.h"
-//#include "Wrappers.h"
+#include "Wrappers.h"
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH

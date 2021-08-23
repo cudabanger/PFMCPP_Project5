@@ -8,7 +8,7 @@ EnvelopeGenerator::VCA::VCA() : gain(1), leadingEdge(false), reTrigger(false)
 
 EnvelopeGenerator::VCA::~VCA()
 {
-    //std::cout << "VCA DTOR" << std::endl;
+    std::cout << "VCA DTOR" << std::endl;
 }
 
 void EnvelopeGenerator::VCA::initialize()
@@ -31,9 +31,19 @@ void EnvelopeGenerator::VCA::silence()
     gain = 0;
 }
 
-EnvelopeGenerator::EnvelopeGenerator() : attack(0), decay(0), sustain(0), release(0)
+EnvelopeGenerator::EnvelopeGenerator() :
+attack(0),
+decay(0),
+sustain(0),
+release(0)
 {
-    vcaWrapper.udt1->initialize();
+    //std::cout << "CTOR EnvelopeGenerator" << std::endl;
+    vca.initialize();
+}
+
+EnvelopeGenerator::~EnvelopeGenerator()
+{
+    //std::cout << "DTOR EnvelopeGenerator" << std::endl;
 }
 
 void EnvelopeGenerator::setADSR(int a, int d, int s, int r)
@@ -64,6 +74,6 @@ int EnvelopeGenerator::getAttack()
 
 void EnvelopeGenerator::printAttackMsg()
 {
-   std::cout << "envGen's Attack is: " << this->getAttack() << std::endl; 
+   std::cout << "envGen's Attack is: " << getAttack() << std::endl; 
 }
 
