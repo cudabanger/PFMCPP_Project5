@@ -2,19 +2,6 @@
 
 #include "KeithEmerson.h"
 
-VCAWrapper::VCAWrapper(EnvelopeGenerator::VCA* _udt) :
-udt1(_udt)
-{
-    std::cout << "CTOR - VCAWrapper " << std::endl;
-}
-
-VCAWrapper::~VCAWrapper()
-{
-    std::cout << "DTOR - VCAWrapper " << std::endl;
-    delete udt1;
-}
-
-////////////////////// Everything works from here.
 EnvelopeGeneratorWrapper::EnvelopeGeneratorWrapper(EnvelopeGenerator* _udt) :
 udt1(_udt)
 {

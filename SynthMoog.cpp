@@ -13,7 +13,7 @@ SynthMoog::~SynthMoog()
 
 void SynthMoog::setVoiceFreq(unsigned int voiceNum, float freq)
 {
-    if ( voiceNum <=3 )
+    if ( voiceNum <= 3 )
     {
         voices[voiceNum].oscWrapper1.udt1->setFrequency(freq);
         voices[voiceNum].oscWrapper2.udt1->setFrequency(freq);
